@@ -1,6 +1,6 @@
 <div align="center">
 
-# Marten<img src="./assert/Marten.png" alt="Marten Image1" width="35"/>: Visual Question Answering with Mask Generation for Multi-modal Document Understanding(CVPR 2025)
+# Marten<img src="./assert/Marten.png" width="35"/>: Visual Question Answering with Mask Generation for Multi-modal Document Understanding(CVPR 2025)
 
 </div>
 
