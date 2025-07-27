@@ -82,13 +82,13 @@ Follow [InternVL2](https://internvl.github.io/blog/2024-07-02-InternVL-2.0/) met
 **Pre-training**
 
 ```bash
-bash ./shell/marten_pretrain.sh
+bash ./shell/marten_internlm2_intervit_pretrain.sh
 ```
 
 **Fine-tuning** 
 
 ```bash
-bash ./shell/marten_finetune.sh
+bash ./shell/marten_internlm2_intervit_finetune.sh
 ```
 
 **Training with MGM**
@@ -101,7 +101,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 ...
 from transformers.modeling_utils import PreTrainedModel
-from ..MGM_module import MGM
+from ..marten_module.MGM import MGM
 
 def dice_loss(pred, target, smooth=1e-6):
     """
@@ -128,14 +128,14 @@ def dice_loss(pred, target, smooth=1e-6):
 
 class CustomModel(PreTrainedModel):
     
-    def __init__(self, config, ..., use_MGM=False):
+    def __init__(self, config, ..., use_mgm=False):
         
         ...
         
         llm_hidden_size = config.llm_config.hidden_size
-        self.use_MGM = use_MGM
+        self.use_mgm = use_mgm
 
-        if self.use_MGM:
+        if self.use_mgm:
             self.MGM_Decoder = MGM(llm_hidden_size, hidden_size=512, dev_convs_nums=4, out_channels=1, layer_num=4)
             self.MGM_Decoder._initialize_weights()
             self.MGM_loss = nn.BCEWithLogitsLoss(pos_weight=torch.tensor([1.5]))    
@@ -161,7 +161,7 @@ class CustomModel(PreTrainedModel):
 
         """
 
-        if self.use_MGM and pixel_values_masks is not None:
+        if self.use_mgm and pixel_values_masks is not None:
             
             # The other parameters are customized for InternVL dynamic slicing. If you use other VFMs, you can delete them.
             MGM_output = self.MGM_Decoder(image_llm_hidden_features, text_llm_hidden_features, output_size, image_patch_size, image_token_num)  
@@ -173,7 +173,7 @@ class CustomModel(PreTrainedModel):
 ### 🔍 Evaluate
 
 ```bash
-bash ./shell/marten/eval.sh
+bash ./shell/eval.sh
 ```
 
 ## 📌 TODO List
